@@ -73,7 +73,7 @@ function execute() {
             function(err) { console.error("Execute error", err); });
 }
 gapi.load("client:auth2", function() {
-gapi.auth2.init({client_id: "YOUR_CLIENT_ID"});
+    gapi.auth2.init({client_id: "YOUR_CLIENT_ID"});
 });
 
 // player.setShuffle(shufflePlaylist:Boolean):Void
