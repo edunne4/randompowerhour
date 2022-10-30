@@ -19,7 +19,6 @@ function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
         height: '390',
         width: '640',
-        videoId: 'M7lc1UVf-VE',
         playerVars: {
             'playsinline': 1
         },
@@ -29,13 +28,13 @@ function onYouTubeIframeAPIReady() {
         }
     });
     console.log('Created player')
-    player.setShuffle(true)
-    player.cuePlaylist(playlist_id, 0, 0)
-    console.log(`Queued plalist ${playlist_id}`)
+    player.shuffle = true
 }
 
 // 4. The API will call this function when the video player is ready.
 function onPlayerReady(event) {
+    player.loadPlaylist(playlist_id, 4, 0)
+    console.log(`Queued plalist ${playlist_id}`)
     event.target.playVideo();
 }
 
@@ -45,7 +44,7 @@ function onPlayerReady(event) {
 var done = false;
 function onPlayerStateChange(event) {
     if (event.data == YT.PlayerState.PLAYING && !done) {
-        setTimeout(stopVideo, 6000);
+        setTimeout(stopVideo, 60000);
         done = true;
     }
 }
