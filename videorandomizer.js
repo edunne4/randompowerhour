@@ -1,52 +1,57 @@
-const playlist_url = 'https://www.youtube.com/playlist?list=PLkQw1IRftefHMLUMmyUbfpKold_3uMJNk'
-fetch(playlist_url)
-   .then(response => response.text())
-   .then(text => console.log(text))
+const base_url = 'https://www.youtube.com/playlist?list='
+const playlist_id = 'PLkQw1IRftefHMLUMmyUbfpKold_3uMJNk'
+// fetch(playlist_url)
+//    .then(response => response.text())
+//    .then(text => console.log(text))
 
 
-// // 2. This code loads the IFrame Player API code asynchronously.
-// var tag = document.createElement('script');
+// 2. This code loads the IFrame Player API code asynchronously.
+var tag = document.createElement('script');
 
-// tag.src = "https://www.youtube.com/iframe_api";
-// var firstScriptTag = document.getElementsByTagName('script')[0];
-// firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-// // 3. This function creates an <iframe> (and YouTube player)
-// //    after the API code downloads.
-// var player;
-// function onYouTubeIframeAPIReady() {
-//     player = new YT.Player('player', {
-//         height: '390',
-//         width: '640',
-//         videoId: 'M7lc1UVf-VE',
-//         playerVars: {
-//             'playsinline': 1
-//         },
-//         events: {
-//             'onReady': onPlayerReady,
-//             'onStateChange': onPlayerStateChange
-//         }
-//     });
-// }
+// 3. This function creates an <iframe> (and YouTube player)
+//    after the API code downloads.
+var player;
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        height: '390',
+        width: '640',
+        videoId: 'M7lc1UVf-VE',
+        playerVars: {
+            'playsinline': 1
+        },
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+        }
+    });
+    console.log('Created player')
+    player.setShuffle(true)
+    player.cuePlaylist(playlist_id, 0, 0)
+    console.log(`Queued plalist ${playlist_id}`)
+}
 
-// // 4. The API will call this function when the video player is ready.
-// function onPlayerReady(event) {
-//     event.target.playVideo();
-// }
+// 4. The API will call this function when the video player is ready.
+function onPlayerReady(event) {
+    event.target.playVideo();
+}
 
-// // 5. The API calls this function when the player's state changes.
-// //    The function indicates that when playing a video (state=1),
-// //    the player should play for six seconds and then stop.
-// var done = false;
-// function onPlayerStateChange(event) {
-//     if (event.data == YT.PlayerState.PLAYING && !done) {
-//         setTimeout(stopVideo, 6000);
-//         done = true;
-//     }
-// }
-// function stopVideo() {
-//     player.stopVideo();
-// }
+// 5. The API calls this function when the player's state changes.
+//    The function indicates that when playing a video (state=1),
+//    the player should play for six seconds and then stop.
+var done = false;
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING && !done) {
+        setTimeout(stopVideo, 6000);
+        done = true;
+    }
+}
+function stopVideo() {
+    player.stopVideo();
+}
 
 
 
@@ -86,5 +91,3 @@ fetch(playlist_url)
 // gapi.load("client:auth2", function() {
 //     gapi.auth2.init({client_id: "YOUR_CLIENT_ID"});
 // });
-
-// player.setShuffle(shufflePlaylist:Boolean):Void
