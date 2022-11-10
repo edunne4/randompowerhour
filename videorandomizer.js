@@ -1,40 +1,39 @@
 const base_url = 'https://www.youtube.com/playlist?list='
 const playlist_id = 'PLkQw1IRftefHMLUMmyUbfpKold_3uMJNk'
-// fetch(playlist_url)
-//    .then(response => response.text())
-//    .then(text => console.log(text))
-
 
 // 2. This code loads the IFrame Player API code asynchronously.
 var tag = document.createElement('script');
 
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+// tag.src = "https://www.youtube.com/iframe_api";
+// var firstScriptTag = document.getElementsByTagName('script')[0];
+// firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-// 3. This function creates an <iframe> (and YouTube player)
-//    after the API code downloads.
-var player;
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-        height: '390',
-        width: '640',
-        playerVars: {
-            'playsinline': 1
-        },
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-        }
-    });
-    console.log('Created player')
-    player.shuffle = true
-}
+// // 3. This function creates an <iframe> (and YouTube player)
+// //    after the API code downloads.
+// var player;
+// function onYouTubeIframeAPIReady() {
+//     player = new YT.Player('player', {
+//         // videoId: 'ROatPGGMvXg',
+//         playerVars: {
+//             'playsinline': 1
+//         },
+//         events: {
+//             'onReady': onPlayerReady,
+//             'onStateChange': onPlayerStateChange,
+//             'onError': onPlayerError
+//         }
+//     });
+//     console.log('Created player')
+// }
 
 // 4. The API will call this function when the video player is ready.
 function onPlayerReady(event) {
-    player.loadPlaylist(playlist_id, 4, 0)
-    console.log(`Queued plalist ${playlist_id}`)
+    event.target.loadPlaylist({list:playlist_id,
+                         listType:'playlist',
+                         index:0})
+    event.target.shuffle = true
+    event.target.loop = true
+    console.log(`Queued playlist ${playlist_id}`)
     event.target.playVideo();
 }
 
@@ -43,50 +42,28 @@ function onPlayerReady(event) {
 //    the player should play for six seconds and then stop.
 var done = false;
 function onPlayerStateChange(event) {
+    console.log(event.data)
     if (event.data == YT.PlayerState.PLAYING && !done) {
-        setTimeout(stopVideo, 60000);
+        console.log('starting timer')
+        setTimeout(nextVideo, 3000);
         done = true;
     }
 }
+
+function onPlayerError(event) {
+    console.log(`ERROR ${event.data}`)
+    if (event.data == 150 || event.data == 101) {
+        nextVideo()
+    }
+}
+
 function stopVideo() {
     player.stopVideo();
 }
+function nextVideo() {
+    console.log('Next Video')
+    done = false;
+    player.nextVideo()
+}
 
 
-
-
-
-
-// // Timer Stuff, might not need. can instead use stopAt for video player
-// window.setInterval("reloadIFrame();", 60000);
-
-// function reloadIFrame() {
-//     document.getElementById('calendar').src = loc;
-//     document.frames["frameNameHere"].location.reload();
-// }
-
-// 
-// function authenticate() {
-//     return gapi.auth2.getAuthInstance()
-//         .signIn({scope: "https://www.googleapis.com/auth/youtube.readonly"})
-//         .then(function() { console.log("Sign-in successful"); },
-//               function(err) { console.error("Error signing in", err); });
-// }
-// function loadClient() {
-//     gapi.client.setApiKey("YOUR_API_KEY");
-//     return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
-//         .then(function() { console.log("GAPI client loaded for API"); },
-//               function(err) { console.error("Error loading GAPI client for API", err); });
-// }
-// // Make sure the client is loaded and sign-in is complete before calling this method.
-// function execute() {
-//     return gapi.client.youtube.playlists.list({})
-//         .then(function(response) {
-//             // Handle the results here (response.result has the parsed body).
-//             console.log("Response", response);
-//             },
-//             function(err) { console.error("Execute error", err); });
-// }
-// gapi.load("client:auth2", function() {
-//     gapi.auth2.init({client_id: "YOUR_CLIENT_ID"});
-// });
